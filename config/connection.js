@@ -4,17 +4,17 @@ const Sequelize = require('sequelize');
 require('dotenv').config();
 
       //-----THIS WAY WORKS------
-const sequelize = new Sequelize('just_tech_news_db', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3306
-});
+// const sequelize = new Sequelize('just_tech_news_db', 'root', 'WinterWins$1969', {
+//   host: 'localhost',
+//   dialect: 'mysql',
+//   port: 3306
+// });
 
 
             //------THIS WAY WORKS---------
 // const sequelize = process.env.JAWSDB_URL
 //   ? new Sequelize(process.env.JAWSDB_URL)
-//   : new Sequelize('just_tech_news_db', 'root', '', {
+//   : new Sequelize('just_tech_news_db', 'root', 'WinterWins$1969', {
 //       host: 'localhost',
 //       port: 3306,
 //       dialect: 'mysql'
@@ -23,13 +23,13 @@ const sequelize = new Sequelize('just_tech_news_db', 'root', '', {
 
 
 //CREATE CONNECTION TO OUR DATABASE, PASS IN YOUR MySQL INFORMATION FOR USERNAME AND P/W
-    //The 'new Sequelize() function takes in database name, username, and p/w as parameters
-        //--THIS DOES NOT WORK <ACCESS DENIED ERROR>--------
-// const sequelize = new Sequelize('process.env.DB_NAME', 'process.env.DB_USER', 'process.env.DB_PW',  {
-//   host: 'localhost',
-//   dialect: 'mysql',
-//   port: 3306,
-// });
+    // The 'new Sequelize() function takes in database name, username, and p/w as parameters
+    //     --THIS DOES NOT WORK <ACCESS DENIED ERROR>--------
+const sequelize = new Sequelize('process.env.DB_NAME', 'process.env.DB_USER', 'process.env.DB_PW',  {
+  host: 'localhost',
+  dialect: 'mysql',
+  port: 3306,
+});
 
 
 
