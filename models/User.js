@@ -5,18 +5,21 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require ('../config/connection');
 
+//REQUIRE bcrypt FOR HASHING PASSWORDS
+const bcrypt = require('bcrypt');
+
 //CREATE USER MODEL
 //MODEL CLASS IS WHAT WE CREATE OUR OWN USER MODELS FROM USING THE extends KEYWORD
 class User extends Model {}
 
 //DEFINE TABLE COLUMNS AND CONFIGURATION
 User.init(
-  {
+{
   //TABLE COLUMN DEFINITIONS GO HERE
       //THIS WILL HAVE 4 COLUMNS
 
 
-  //DEFINE AN ID COLUMN
+  //1. DEFINE AN ID COLUMN
     id: {
       //USE THE SPECIAL Sequelize DataTypes object to provide what type of data it is
       type: DataTypes.INTEGER,
@@ -27,12 +30,12 @@ User.init(
       //TURN ON AUTO INCREMENT
       autoIncrement: true
     },
-  //DEFINE A USERNAME COLUMN
+  //2. DEFINE A USERNAME COLUMN
     username: {
       type: DataTypes.STRING,
       allowNull: false
     },
-  //DEFINE AN EMAIL COLUMN
+  //3. DEFINE AN EMAIL COLUMN
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -43,7 +46,7 @@ User.init(
         isEmail: true
       }
     },
-  //DEFINE A PASSWORD COLUMN
+  //4. DEFINE A PASSWORD COLUMN
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -52,15 +55,29 @@ User.init(
         len: [4]
       }
     }
-  },
-
+},
   
+{
+    //hooks (or lifecycle events), are functions that are called before or after calls in Sequelize
+    hooks: {
+      //ADD THE ASYNC FUNCTION TO THE hooks PROPERTY
 
- 
+              //----CREATE NEW USER PASSWORD-----
+      //set up `beforeCreate` lifecycle 'hook' functionality
+      async beforeCreate(newUserData){
+        newUserData.password = await bcrypt.hash(newUserData.password, 10);
+        return newUserData;
+      },
+      
+              //----UPDATE USER PASSWORD--------
+      //set up `beforeUpdate` lifecycle 'hook' functionality
+      async beforeUpdate(updatedUserData){
+        updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+        return updatedUserData;
+      } 
+    },
 
-
-
-  {
+    
     //TABLE CONFIGURATION OPTIONS GO HERE (https://sequelize.org/v5/manual/models-definition.html#configuration))
 
     //PASS IN OUR IMPORTED SEQUELIZE CONNECTION (the direct connection to our database)

@@ -8,6 +8,7 @@ router.get('/',(req,res) => {
   //Access our User model and run .findAll() method
   //THIS IS SIMILAR TO THE <SELECT * FROM users;> SQL method
   User.findAll({
+    //PREVENTS PASSWORDS FROM RETURNING IN THE QUERY
     attributes: { exclude: ['password']}
   })
     .then(dbUserData => res.json(dbUserData))
@@ -71,7 +72,9 @@ router.put('/:id', (req,res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
   //if req.body has exact key/value pairs to match the model, you can just use req.body
+  //PASS IN REQ.BODY INSTEAD TO ONLY UPDATE WHAT'S PASSED THROUGH
   User.update(req.body, {
+    individualHooks: true,
     where: {
       id: req.params.id
     }
