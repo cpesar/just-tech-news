@@ -2,7 +2,7 @@
 
 
 //IMPORT MODEL CLASS AND DataTypes FROM SEQUELIZE
-const { Model, DataTypes } = require ('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require ('../config/connection');
 
 //CREATE USER MODEL
