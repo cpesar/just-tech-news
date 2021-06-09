@@ -30,7 +30,7 @@ User.init(
   //DEFINE A USERNAME COLUMN
     username: {
       type: DataTypes.STRING,
-      allowNull: False
+      allowNull: false
     },
   //DEFINE AN EMAIL COLUMN
     email: {
