@@ -66,6 +66,36 @@ router.post('/', (req,res) => {
 
 
 
+//This route will be found at http://localhost:3001/api/users/login in the browser.
+//The post method carries the request parameter in the req.body, which makes it a more secure way of transferring data from client to server
+router.post('/login', (req, res) => {
+  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+  // This will query the user table using the findOne() method for the email entered by the user and assign it to the req.body.email
+  User.findOne({
+    where: {
+      email: req.body.email
+    }
+  }).then(dbUserData => {
+    //If no user with the email entered is found, a message is sent back as a response to the client
+    if(!dbUserData){
+      res.status(400).json({ message: 'No user with that email address' });
+      return;
+    }
+  
+
+    //VERIFY USER
+    const validPassword = dbUserData.checkPassword(req.body.password);
+    if(!validPassword){
+      res.status(400).json({ message: 'Incorrect password '});
+      return;
+    }
+    res.json({ user: dbUserData, message: 'You are now logged in '});
+
+  });
+});
+
+
+
 
 //PUT /api/users/1
 router.put('/:id', (req,res) => {
