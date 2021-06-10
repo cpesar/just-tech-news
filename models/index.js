@@ -6,6 +6,7 @@ const Post = require('./Post');
 //IMPORT VOTE MODEL
 const Vote = require('./Vote');
 
+
 //CREATE ASSOCIATIONS
 //A user can make many posts, but a post only belongs to a single user- never many users
 User.hasMany(Post, {
