@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt');
 //MODEL CLASS IS WHAT WE CREATE OUR OWN USER MODELS FROM USING THE extends KEYWORD
 class User extends Model {
   //set up method to run on instance data (per user) to check password
-  //NOTE WHEN USING bcrypt ON A SERVER ASYNC IS RECOMMENDED
+  //NOTE WHEN USING bcrypt ON A SERVER async IS RECOMMENDED
   checkPassword(loginPw) {
     //USING THE .this METHOD WE CAN ACCESS THE USER'S PROPERTIES, INCLUDING THE PASSWORD, WHICH WAS STORED AS A HASHED STRING
     //THIS WILL RETURN TRUE ON SUCCESS, OR FALSE ON FAILURE

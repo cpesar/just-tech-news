@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Post, Vote } = require('../../models');
 
 
 
-//GET /api/users
+//GET ROUTE FOR ALL USERS
+//  http://localhost:3001/api/users
 router.get('/',(req,res) => {
   //Access our User model and run .findAll() method
   //THIS IS SIMILAR TO THE <SELECT * FROM users;> SQL method
@@ -21,15 +22,36 @@ router.get('/',(req,res) => {
 
 
 
-//GET /api/users/1
+//GET ROUTE FOR USER BY ID
+// http://localhost:3001/api/users/1
 router.get('/:id', (req,res) => {
   //THIS WILL ONLY RETURN ONE USER BASED ON ITS <req.params.id> value
   //THIS IS SIMILAR TO THE SQL <SELECT * FROM users WHERE id = 1>
   User.findOne({
     attributes: { exclude: ['password']},
+    //The same as: SELECT * FROM users WHERE id = 1
     where: {
       id: req.params.id
-    }
+    },
+    
+    include: [
+      {
+        model: Post,
+        attributes: [
+          'id',
+          'title', 
+          'post_url', 
+          'created_at'
+        ]
+      },
+      {
+      //when we query a user, we can see which post the user has created and which post the user has voted on
+        model: Post,
+        attributes: ['title'],
+        through: Vote,
+        as: 'voted_posts'
+      }
+    ]
   })
   .then(dbUserData => {
     if (!dbUserData){
@@ -48,7 +70,8 @@ router.get('/:id', (req,res) => {
 
 
 
-//POST /api/users
+//POST ROUTE FOR ALL USERS
+// http://localhost:3001/api/users
 router.post('/', (req,res) => {
   User.create({
     //expects this format {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
@@ -97,7 +120,8 @@ router.post('/login', (req, res) => {
 
 
 
-//PUT /api/users/1
+//PUT ROUTE FOR USERS BY ID
+// http://localhost:3001/api/users/1
 router.put('/:id', (req,res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
@@ -129,7 +153,8 @@ router.put('/:id', (req,res) => {
 
 
 
-//DELETE /api/users/1
+//DELETE ROUTE FOR USERS BY ID
+// http://localhost:3001/api/users/1
 router.delete('/:id', (req,res) => {
   User.destroy({
     where: {

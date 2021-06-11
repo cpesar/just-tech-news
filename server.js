@@ -13,6 +13,7 @@ app.use(routes);
 
 // TURN ON CONNECTION TO DB AND SERVER
 //force: true ---- Forces tables to recreate if there are any changes
+  // if sequelize.sync were set to true, it would drop and recreate all of the databases on startup
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
 });

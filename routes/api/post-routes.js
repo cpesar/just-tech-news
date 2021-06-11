@@ -10,6 +10,7 @@ const { Post, User, Vote } = require('../../models');
 
 
 //ROUTE TO RETRIEVE ALL POSTS IN THE DB
+// http://localhost:3001/api/posts
 router.get('/', (req, res) => {
   console.log('==============');
   Post.findAll({
@@ -46,6 +47,7 @@ router.get('/', (req, res) => {
 
 
 //ROUTE TO GET A SINGLE POST
+// http://localhost:3001/api/posts/<id>
 router.get('/:id', (req,res) => {
   Post.findOne({
     where: {
@@ -88,6 +90,7 @@ router.get('/:id', (req,res) => {
 
 
 //ROUTE TO CREATE A NEW POST
+// http://localhost:3001/api/posts/
 router.post('/', (req,res) => {
   // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
   Post.create({
@@ -105,37 +108,50 @@ router.post('/', (req,res) => {
 
 
 //PUT ROUTE FOR VOTING ON A POST
-// api/posts/upvote
+// http://localhost:3001/api/posts/upvote
 
+// router.put('/upvote', (req,res) => {
+//   console.log(req.body);
+//   Vote.create({
+//     user_id: req.body.user_id,
+//     post_id: req.body.post_id
+//   }).then(() => {
+//     console.log('created vote!')
+//     //then find the post that was just voted on
+//     return Post.findOne({
+//       where: {
+//         id: req.body.post_id
+//       },
+//       attributes: [
+//         'id',
+//         'post_url',
+//         'title',
+//         'created_at',
+//         [
+//           sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+//           'vote_count'
+//         ]
+//       ]
+//     })
+//     .then(dbPostData => res.json(dbPostData))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+//   })
+// });
+
+
+
+//UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
 router.put('/upvote', (req,res) => {
-  console.log(req.body);
-  Vote.create({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id
-  }).then(() => {
-    console.log('created vote!')
-    //then find the post that was just voted on
-    return Post.findOne({
-      where: {
-        id: req.body.post_id
-      },
-      attributes: [
-        'id',
-        'post_url',
-        'title',
-        'created_at',
-        [
-          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
-          'vote_count'
-        ]
-      ]
-    })
-    .then(dbPostData => res.json(dbPostData))
+  //custom static method created in models/Post.js
+  Post.upvote(req.body, { Vote })
+    .then(updatedPostData => res.json(updatedPostData))
     .catch(err => {
       console.log(err);
       res.status(400).json(err);
     });
-  })
 });
 
 
