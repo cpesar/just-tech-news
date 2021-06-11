@@ -14,7 +14,17 @@ router.get('/', (req, res) => {
   console.log('==============');
   Post.findAll({
     //QUERY CONFIGURATION
-    attributes: ['id', 'post_url', 'title', 'created_at'],
+    attributes: [
+      'id', 
+      'post_url', 
+      'title', 
+      'created_at',
+      [
+        //includes the total vote count for a post
+        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+          'vote_count'
+      ]
+    ],
     //order the posts in DESCending order
     order: [[ 'created_at', 'DESC']],
     include: [
@@ -41,7 +51,17 @@ router.get('/:id', (req,res) => {
     where: {
       id: req.params.id
     },
-    attributes: ['id', 'post_url', 'title', 'created_at'],
+    attributes: [
+      'id', 
+      'post_url', 
+      'title', 
+      'created_at',
+      [
+        //includes the total vote count for a post
+        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+          'vote_count'
+      ]
+    ],
     include: [
 
       {
