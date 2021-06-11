@@ -3,7 +3,7 @@ const sequelize = require('../../config/connection');
 
 const router = require('express').Router();
 //IMPORT THESE MODELS
-const { Post, User, Vote } = require('../../models');
+const { Post, User, Vote, Comment } = require('../../models');
 
 
 
