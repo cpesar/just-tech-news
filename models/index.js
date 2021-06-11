@@ -5,6 +5,9 @@ const User = require('./User');
 const Post = require('./Post');
 //IMPORT VOTE MODEL
 const Vote = require('./Vote');
+//IMPORT COMMENT MODEL
+const Comment = require('./Comment');
+
 
 
 //CREATE ASSOCIATIONS
@@ -63,5 +66,26 @@ Post.hasMany(Vote, {
 });
 
 
+
+
+
+//CONNECT THE MODELS (we only want to see the user's comment and which post it was for)
+Comment.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+
+Comment.belongsTo(Post, {
+  foreignKey: 'post_id'
+});
+
+User.hasMany(Comment, {
+  foreignKey: 'user_id'
+});
+
+Post.hasMany(Comment, {
+  foreignKey: 'post_id'
+});
+
+
 //EXPORT OBJECT WITH USER MODEL AS A PROPERTY
-module.exports = { User, Post, Vote };
+module.exports = { User, Post, Vote, Comment };
