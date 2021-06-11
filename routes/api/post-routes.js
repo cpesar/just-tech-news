@@ -87,12 +87,13 @@ router.post('/', (req,res) => {
 //PUT ROUTE FOR VOTING ON A POST
 // api/posts/upvote
 
-//THIS DOES NOT APPEAR TO BE WORKING PROPERLY, HOWEVER WHEN I USE <./upvote> as opposed to </upvote> I DON'T GET AN ERROR. WHY????????
-router.put('./upvote', (req,res) => {
+router.put('/upvote', (req,res) => {
+  console.log(req.body);
   Vote.create({
     user_id: req.body.user_id,
     post_id: req.body.post_id
   }).then(() => {
+    console.log('created vote!')
     //then find the post that was just voted on
     return Post.findOne({
       where: {
