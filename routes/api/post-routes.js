@@ -1,9 +1,11 @@
+//IMPORT THE CONNECTION TO THE DATABASE
+const sequelize = require('../../config/connection');
+
 const router = require('express').Router();
 //IMPORT THESE MODELS
 const { Post, User, Vote } = require('../../models');
 
-//IMPORT THE CONNECTION TO THE DATABASE
-const sequelize = require('../../config/connection');
+
 
 
 
@@ -83,35 +85,36 @@ router.post('/', (req,res) => {
 
 
 //PUT ROUTE FOR VOTING ON A POST
-router.put('/upvote', (req,res) => {
- // create the vote
-Vote.create({
-  user_id: req.body.user_id,
-  post_id: req.body.post_id
-}).then(() => {
-  // then find the post we just voted on
-  return Post.findOne({
-    where: {
-      id: req.body.post_id
-    },
-    attributes: [
-      'id',
-      'post_url',
-      'title',
-      'created_at',
-      // use raw MySQL aggregate function query to get a count of how many votes the post has and return it under the name `vote_count`
-      [
-        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-        'vote_count'
+// api/posts/upvote
+
+//THIS DOES NOT APPEAR TO BE WORKING PROPERLY, HOWEVER WHEN I USE <./upvote> as opposed to </upvote> I DON'T GET AN ERROR. WHY????????
+router.put('./upvote', (req,res) => {
+  Vote.create({
+    user_id: req.body.user_id,
+    post_id: req.body.post_id
+  }).then(() => {
+    //then find the post that was just voted on
+    return Post.findOne({
+      where: {
+        id: req.body.post_id
+      },
+      attributes: [
+        'id',
+        'post_url',
+        'title',
+        'created_at',
+        [
+          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+          'vote_count'
+        ]
       ]
-    ]
+    })
+    .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+      console.log(err);
+      res.status(400).json(err);
+    });
   })
-  .then(dbPostData => res.json(dbPostData))
-  .catch(err => {
-    console.log(err);
-    res.status(400).json(err);
-  });
-});
 });
 
 
