@@ -2,7 +2,7 @@
 
 
 //IMPORT THESE 
-//model and DataTypes from sequelize
+//model and DataTypes from sequelize package
 const { Model, DataTypes } = require('sequelize');
 //connection to MySQL
 const sequelize = require('../config/connection');

@@ -111,53 +111,63 @@ router.post('/', (req,res) => {
 //PUT ROUTE FOR VOTING ON A POST
 // http://localhost:3001/api/posts/upvote
 
-// router.put('/upvote', (req,res) => {
-//   console.log(req.body);
-//   Vote.create({
-//     user_id: req.body.user_id,
-//     post_id: req.body.post_id
-//   }).then(() => {
-//     console.log('created vote!')
-//     //then find the post that was just voted on
-//     return Post.findOne({
-//       where: {
-//         id: req.body.post_id
-//       },
-//       attributes: [
-//         'id',
-//         'post_url',
-//         'title',
-//         'created_at',
-//         [
-//           sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
-//           'vote_count'
-//         ]
-//       ]
-//     })
-//     .then(dbPostData => res.json(dbPostData))
-//     .catch(err => {
-//       console.log(err);
-//       res.status(400).json(err);
-//     });
-//   })
-// });
-
-
-
-//UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
 router.put('/upvote', (req,res) => {
-  //custom static method created in models/Post.js
-  Post.upvote(req.body, { Vote })
-    .then(updatedPostData => res.json(updatedPostData))
+  console.log(req.body);
+  Vote.create({
+    user_id: req.body.user_id,
+    post_id: req.body.post_id
+  }).then(() => {
+    console.log('created vote!')
+    //then find the post that was just voted on
+    return Post.findOne({
+      where: {
+        id: req.body.post_id
+      },
+      attributes: [
+        'id',
+        'post_url',
+        'title',
+        'created_at',
+        [
+          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+          'vote_count'
+        ]
+      ]
+    })
+    .then(dbPostData => res.json(dbPostData))
     .catch(err => {
       console.log(err);
       res.status(400).json(err);
     });
+  })
 });
 
 
 
- 
+// PUT /api/posts/upvote
+//UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
+// router.put('/upvote', (req,res) => {
+//   //custom static method created in models/Post.js
+//   Post.upvote(req.body, { Vote })
+//     .then(updatedPostData => res.json(updatedPostData))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+// });
+
+
+// PUT /api/posts/upvote
+// router.put('/upvote', (req, res) => {
+// Vote.create({
+//   user_id: req.body.user_id,
+//   post_id: req.body.post_id
+// })
+//   .then(dbPostData => res.json(dbPostData))
+//   .catch(err => res.json(err));
+// });
+
+
 
 
 //UPDATE A POST'S TITLE USING A PUT ROUTE
