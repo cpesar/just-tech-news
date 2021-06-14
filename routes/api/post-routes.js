@@ -28,6 +28,7 @@ router.get('/', (req, res) => {
     ],
     //order the posts in DESCending order
     order: [[ 'created_at', 'DESC']],
+    //USE INCLUDE TO JOIN TABLES
     include: [
       {
         model: User,

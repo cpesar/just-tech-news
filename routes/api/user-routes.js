@@ -28,30 +28,31 @@ router.get('/:id', (req,res) => {
   //THIS WILL ONLY RETURN ONE USER BASED ON ITS <req.params.id> value
   //THIS IS SIMILAR TO THE SQL <SELECT * FROM users WHERE id = 1>
   User.findOne({
-    attributes: { exclude: ['password']},
+    // attributes: { exclude: ['password']},
     //The same as: SELECT * FROM users WHERE id = 1
+    attributes: { exclude: ['password']},
     where: {
       id: req.params.id
-    },
+    }
     
-    include: [
-      {
-        model: Post,
-        attributes: [
-          'id',
-          'title', 
-          'post_url', 
-          'created_at'
-        ]
-      },
-      {
-      //when we query a user, we can see which post the user has created and which post the user has voted on
-        model: Post,
-        attributes: ['title'],
-        through: Vote,
-        as: 'voted_posts'
-      }
-    ]
+    // include: [
+    //   {
+    //     model: Post,
+    //     attributes: [
+    //       'id',
+    //       'title', 
+    //       'post_url', 
+    //       'created_at'
+    //     ]
+    //   },
+    //   {
+    //   //when we query a user, we can see which post the user has created and which post the user has voted on
+    //     model: Post,
+    //     attributes: ['title'],
+    //     through: Vote,
+    //     as: 'voted_posts'
+    //   }
+    // ]
   })
   .then(dbUserData => {
     if (!dbUserData){
@@ -75,6 +76,11 @@ router.get('/:id', (req,res) => {
 router.post('/', (req,res) => {
   User.create({
     //expects this format {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
+
+    //req.body using MySQL commands:
+        // INSERT INTO users (username, email, password) 
+        //VALUES("Lernantino", "lernantino@gmail.com", "password1234");
+
     username: req.body.username,
     email: req.body.email,
     password: req.body.password
@@ -124,6 +130,8 @@ router.post('/login', (req, res) => {
 // http://localhost:3001/api/users/1
 router.put('/:id', (req,res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
+
+  //COMBINES THE PARAMETERS FOR CREATING DATA AND LOOKING UP DATA(req.body, and req.params)
 
   //if req.body has exact key/value pairs to match the model, you can just use req.body
   //PASS IN REQ.BODY INSTEAD TO ONLY UPDATE WHAT'S PASSED THROUGH
