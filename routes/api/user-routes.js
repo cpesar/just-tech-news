@@ -59,6 +59,7 @@ router.get('/:id', (req,res) => {
       return;
     }
     res.json(dbUserData);
+  
   })
   .catch(err => {
     console.log(err);

@@ -22,7 +22,8 @@ router.get('/', (req, res) => {
       'created_at',
       [
         //includes the total vote count for a post
-        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+        //THIS WILL ATTRIBUTE A GIVEN VOTE TO ITS CORRESPONDING POST, NOT ALL OF THE POSTS
+        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
           'vote_count'
       ]
     ],
@@ -61,7 +62,7 @@ router.get('/:id', (req,res) => {
       'created_at',
       [
         //includes the total vote count for a post
-        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
           'vote_count'
       ]
     ],
@@ -129,7 +130,7 @@ router.put('/upvote', (req,res) => {
         'title',
         'created_at',
         [
-          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post_id = vote.post_id)'),
+          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
           'vote_count'
         ]
       ]
