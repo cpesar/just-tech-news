@@ -14,7 +14,7 @@ require('dotenv').config();
 // });
 
 
-//AFTER PUSHING TO JAWS DB:
+//AFTER PUSHING TO HEROKU AND ADDING JAWS DB:
 let sequelize;
 
 if(process.env.JAWSDB_URL){
