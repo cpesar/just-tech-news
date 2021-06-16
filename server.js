@@ -1,6 +1,12 @@
 const express = require('express');
-const routes = require('./routes');
+const routes = require('./controllers');
 const sequelize = require('./config/connection');
+
+//For express-handlebars
+const exphbs = require('express-handlebars');
+const hbs = exphbs.create({});
+
+
 
 // for stylesheets
 const path = require('path');
@@ -19,6 +25,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // turn on routes
 app.use(routes);
+
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 
 // TURN ON CONNECTION TO DB AND SERVER
 //force: true ---- Forces tables to recreate if there are any changes
