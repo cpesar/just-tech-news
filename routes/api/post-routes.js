@@ -15,7 +15,8 @@ router.get('/', (req, res) => {
   console.log('==============');
   Post.findAll({
     //QUERY CONFIGURATION
-   
+   //order the posts in DESCending order
+    order: [['created_at', 'DESC']],
     attributes: [
       'id', 
       'post_url', 
@@ -26,8 +27,6 @@ router.get('/', (req, res) => {
         //THIS WILL ATTRIBUTE A GIVEN VOTE TO ITS CORRESPONDING POST, NOT ALL OF THE POSTS
        [ sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),'vote_count']
     ],
-    //order the posts in DESCending order
-    order: [[ 'created_at', 'DESC ']],
      
     include:[
       //include comment model
