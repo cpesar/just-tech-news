@@ -2,11 +2,20 @@ const express = require('express');
 const routes = require('./routes');
 const sequelize = require('./config/connection');
 
+// for stylesheets
+const path = require('path');
+
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// FOR THE PUBLIC DIRECTORY
+  // express.static() is middleware that can take all of the contents of a folder and serve them as static assets
+  // express.static() is useful for front end specific files like images, style sheets, and JS files
+  //To ensure that the middleware is working, visit: http://localhost:3001/stylesheets/style.css 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // turn on routes
 app.use(routes);
