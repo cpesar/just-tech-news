@@ -15,22 +15,31 @@ router.get('/', (req, res) => {
   console.log('==============');
   Post.findAll({
     //QUERY CONFIGURATION
+   
     attributes: [
       'id', 
       'post_url', 
       'title', 
       'created_at',
-      [
+      
         //includes the total vote count for a post
         //THIS WILL ATTRIBUTE A GIVEN VOTE TO ITS CORRESPONDING POST, NOT ALL OF THE POSTS
-        sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-          'vote_count'
-      ]
+       [ sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),'vote_count']
     ],
     //order the posts in DESCending order
-    order: [[ 'created_at', 'DESC']],
+    order: [[ 'created_at', 'DESC ']],
+     
+    include:[
+      //include comment model
+      {
+        model: Comment,
+        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+        include: {
+          model: User,
+          attributes: [ 'username' ]
+        }
+      },
     //USE INCLUDE TO JOIN TABLES
-    include: [
       {
         model: User,
         attributes: ['username']
@@ -67,10 +76,17 @@ router.get('/:id', (req,res) => {
       ]
     ],
     include: [
-
       {
         model: User,
         attributes: ['username']
+      },
+      {
+        model: Comment,
+        attributes: ['id', 'comment_text', 'created_at'],
+        include:{
+          model: User,
+          attributes: ['username']
+        }
       }
     ]
   })
@@ -112,50 +128,50 @@ router.post('/', (req,res) => {
 //PUT ROUTE FOR VOTING ON A POST
 // http://localhost:3001/api/posts/upvote
 
-router.put('/upvote', (req,res) => {
-  console.log(req.body);
-  Vote.create({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id
-  }).then(() => {
-    console.log('created vote!')
-    //then find the post that was just voted on
-    return Post.findOne({
-      where: {
-        id: req.body.post_id
-      },
-      attributes: [
-        'id',
-        'post_url',
-        'title',
-        'created_at',
-        [
-          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-          'vote_count'
-        ]
-      ]
-    })
-    .then(dbPostData => res.json(dbPostData))
-    .catch(err => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-  })
-});
+// router.put('/upvote', (req,res) => {
+//   // console.log(req.body);
+//   Vote.create({
+//     user_id: req.body.user_id,
+//     post_id: req.body.post_id
+//   }).then(() => {
+//     console.log('created vote!')
+//     //then find the post that was just voted on
+//     return Post.findOne({
+//       where: {
+//         id: req.body.post_id
+//       },
+//       attributes: [
+//         'id',
+//         'post_url',
+//         'title',
+//         'created_at',
+//         [
+//           sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
+//           'vote_count'
+//         ]
+//       ]
+//     })
+//     .then(dbPostData => res.json(dbPostData))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+//   })
+// });
 
 
 
 // PUT /api/posts/upvote
 //UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
-// router.put('/upvote', (req,res) => {
-//   //custom static method created in models/Post.js
-//   Post.upvote(req.body, { Vote })
-//     .then(updatedPostData => res.json(updatedPostData))
-//     .catch(err => {
-//       console.log(err);
-//       res.status(400).json(err);
-//     });
-// });
+router.put('/upvote', (req,res) => {
+  //custom static method created in models/Post.js
+  Post.upvote(req.body, { Vote })
+    .then(updatedPostData => res.json(updatedPostData))
+    .catch(err => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+});
 
 
 // PUT /api/posts/upvote

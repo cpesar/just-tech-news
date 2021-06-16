@@ -31,7 +31,7 @@ Post.belongsTo(User, {
 User.belongsToMany(Post, {
   through: Vote,
   //the name of the vote model is voted_posts
-  as: 'voted-posts',
+  as: 'voted_posts',
   //FOREIGN KEY CONSTRAINT
   //the foreign keys are unique which prevents a single user from voting on one post multiple times
   foreignKey: 'user_id'

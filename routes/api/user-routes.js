@@ -28,21 +28,25 @@ router.get('/:id', (req,res) => {
   //THIS WILL ONLY RETURN ONE USER BASED ON ITS <req.params.id> value
   //THIS IS SIMILAR TO THE SQL <SELECT * FROM users WHERE id = 1>
   User.findOne({
-    // attributes: { exclude: ['password']},
+    attributes: { exclude: ['password']},
     //The same as: SELECT * FROM users WHERE id = 1
-    // attributes: { exclude: ['password']},
     where: {
       id: req.params.id
     },
     include: [
       {
         model: Post,
-        attributes: [
-          'id',
-          'title', 
-          'post_url', 
-          'created_at'
-        ]
+        attributes: ['id','title', 'post_url', 'created_at']
+      },
+      {
+        //include the comment model
+        model: Comment,
+        attributes: ['id', 'comment_text', 'created_at'],
+        include:{
+          //include the post model on the comment model so we can see which posts a user commented on
+          model: Post,
+          attributes: ['title']
+        }
       },
       {
       //when we query a user, we can see which post the user has created and which post the user has voted on
@@ -50,7 +54,7 @@ router.get('/:id', (req,res) => {
         attributes: ['title'],
         through: Vote,
         as: 'voted_posts'
-      }
+      },
     ]
   })
   .then(dbUserData => {
