@@ -69,4 +69,16 @@ router.get('/', (req, res) => {
   });
 });
 
+
+
+
+//LOGIN ROUTE
+// http://localhost:3001/login
+router.get('/login', (req,res) => {
+  res.render('login')
+})
+
+
+
+
 module.exports = router;
