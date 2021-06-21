@@ -5,6 +5,7 @@ const sequelize = require('../config/connection');
 const {Post, User, Comment } = require('../models');
 
 router.get('/', (req, res) => {
+  console.log('======================');
   //use res.render because we hooked up a template engine and specify which template we want to use. In this case wer are using the 'homepage template
   //TAKES A POST OBJECT AND PASSES IT INTO THE homepage.handlebars TEMPLATE
 
@@ -75,10 +76,30 @@ router.get('/', (req, res) => {
 //LOGIN ROUTE
 // http://localhost:3001/login
 router.get('/login', (req,res) => {
+  if(req.session.loggedIn){
+    res.redirect('/');
+    return;
+  }
   res.render('login')
-})
+});
 
 
 
+
+// http://localhost:3001/api/users/login
+
+
+// router.get('/', (req,res) =>{
+//   console.log(req.session);
+
+// });
+router.get('/login', (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect('/');
+    return;
+  }
+
+  res.render('login');
+});
 
 module.exports = router;

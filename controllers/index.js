@@ -5,11 +5,12 @@ const router = require('express').Router();
 
 //API ROUTES
 const apiRoutes = require('./api');
-router.use('/api', apiRoutes);
+const homeRoutes = require('./home-routes.js');
 
 //CONTROLLER ROUTES
-const homeRoutes = require('./home-routes.js');
+
 router.use('/', homeRoutes);
+router.use('/api', apiRoutes);
 
 //IF WE MAKE A REQUEST TO AN ENDPOINT THAT DOESN'T EXIST, WE GET A 404 ERROR
 router.use((req, res) => {

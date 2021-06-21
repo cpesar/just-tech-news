@@ -89,16 +89,52 @@ router.post('/', (req,res) => {
     email: req.body.email,
     password: req.body.password
   })
-  .then(dbUserData => res.json(dbUserData))
+  // .then(dbUserData => res.json(dbUserData))
+  // .catch(err => {
+  //   console.log(err);
+  //   res.status(500).json(err);
+  // });
+
+// THIS BLOCK IS FROM THE FINISHED CODE IN THE MODULE
+  .then(dbUserData => {
+    req.session.save(() => {
+      req.session.user_id = dbUserData.id;
+      req.session.username = dbUserData.username;
+      req.session.loggedIn = true;
+
+      res.json(dbUserData);
+    });
+  })
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
+
+
+
+
+  //          THIS CODE BLOCK WAS NOT WORKING save() is undefined error
+  //GIVES THE SERVER ACCESS TO ID AND USERNAME, AND A BOOLEAN TELLING IT WHETHER THE USE IS LOGGED IN OR NOT
+  // .then(dbUserData => {
+  //   //req.session.save():
+  //     //wrap in a callback function to make sure that the session is created before sending the response
+  //   req.session.save(() => {
+  //     req.session.user_id = dbUserData.id;
+  //     req.session.username = dbUserData.username;
+  //     req.session.loggedIn = true;
+
+  //     res.json(dbUserData);
+  //   });
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  //   res.status(500).json(err);
+  // });
 });
 
 
 
-
+//LOGIN ROUTE
 //This route will be found at http://localhost:3001/api/users/login in the browser.
 //The post method carries the request parameter in the req.body, which makes it a more secure way of transferring data from client to server
 router.post('/login', (req, res) => {
@@ -122,12 +158,37 @@ router.post('/login', (req, res) => {
       res.status(400).json({ message: 'Incorrect password '});
       return;
     }
-    res.json({ user: dbUserData, message: 'You are now logged in '});
 
+    // req.session.save(() => {
+    //   //declare session variables
+    //   req.session.user_id =dbUserData.id;
+    //   req.session.username =dbUserData.username;
+    //   req.session.loggedIn =true;
+
+    req.session.save(() => {
+      req.session.user_id = dbUserData.id;
+      req.session.username = dbUserData.username;
+      req.session.loggedIn = true;
+    
+    res.json({ user: dbUserData, message: 'You are now logged in '});
+    });
   });
 });
 
 
+
+
+//LOG OUT ROUTE
+router.post('/logout', (req,res) => {
+  if(req.session.loggedIn){
+    req.session.destroy(() => {
+      res.status(204).end();
+    });
+  }
+  else{
+    res.status(404).end();
+  }
+})
 
 
 //PUT ROUTE FOR USERS BY ID
@@ -146,7 +207,7 @@ router.put('/:id', (req,res) => {
     }
   })
   .then(dbUserData => {
-    if(!dbUserData [0]){
+    if(!dbUserData){
       res.status(404).json({ message: 'No user found with this id' });
       return;
     }
