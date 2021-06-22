@@ -188,7 +188,7 @@ router.post('/logout', (req,res) => {
   else{
     res.status(404).end();
   }
-})
+});
 
 
 //PUT ROUTE FOR USERS BY ID
