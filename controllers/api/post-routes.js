@@ -1,6 +1,5 @@
 //IMPORT THE CONNECTION TO THE DATABASE
 const sequelize = require('../../config/connection');
-
 const router = require('express').Router();
 //IMPORT THESE MODELS
 const { Post, User, Vote, Comment } = require('../../models');
@@ -14,7 +13,7 @@ const { Post, User, Vote, Comment } = require('../../models');
 router.get('/', (req, res) => {
   console.log('==============');
   Post.findAll({
-    //QUERY CONFIGURATION
+   //QUERY CONFIGURATION
    //order the posts in DESCending order
     order: [['created_at', 'DESC']],
     attributes: [
@@ -29,8 +28,8 @@ router.get('/', (req, res) => {
     ],
      
     include:[
-      //include comment model
       {
+      //include comment model
         model: Comment,
         attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
         include: {

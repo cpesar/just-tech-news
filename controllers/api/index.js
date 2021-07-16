@@ -1,4 +1,4 @@
-//THIS FILE WILL COLLECT ALL OF THE API ROUTES AND PACKAGE THEM UP FOR US
+// This file will collect all of the api routes and export them
 
 const router = require('express').Router();
 
