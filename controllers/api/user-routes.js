@@ -75,7 +75,7 @@ router.get('/:id', (req,res) => {
 
 
 
-//POST ROUTE FOR ALL USERS
+//CREATE A NEW USER
 // http://localhost:3001/api/users
 router.post('/', (req,res) => {
   User.create({

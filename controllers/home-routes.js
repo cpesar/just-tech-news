@@ -6,7 +6,7 @@ const {Post, User, Comment } = require('../models');
 
 router.get('/', (req, res) => {
   console.log('======================');
-  //use res.render because we hooked up a template engine and specify which template we want to use. In this case wer are using the 'homepage template
+  //use res.render because we hooked up a template engine and specify which template we want to use. In this case we are using the 'homepage template
   //TAKES A POST OBJECT AND PASSES IT INTO THE homepage.handlebars TEMPLATE
 
   // res.render('homepage', {
@@ -98,8 +98,25 @@ router.get('/login', (req, res) => {
     res.redirect('/');
     return;
   }
-
   res.render('login');
+});
+
+
+
+router.get('/post/:id', (req,res) => {
+  const post = {
+    id:1,
+    post_url: 'https://handlebars.com/guide/',
+    title: 'Handlebars Docs',
+    created_at: new Date(),
+    vote_count: 10,
+    comments: [{}, {}],
+    user:{
+      username: 'test_user'
+    }
+  };
+  //this references the single-post.handlebars file
+  res.render('single-post', { post });
 });
 
 module.exports = router;
