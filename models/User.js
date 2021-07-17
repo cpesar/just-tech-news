@@ -26,41 +26,34 @@ User.init(
 {
   //TABLE COLUMN DEFINITIONS GO HERE
       //THIS WILL HAVE 4 COLUMNS
-
-
-  //1. DEFINE AN ID COLUMN
     id: {
       //USE THE SPECIAL Sequelize DataTypes object to provide what type of data it is
       type: DataTypes.INTEGER,
-      //EQUIVALENT TO SQL'S 'NOT NULL' option
+      // Equivalent to SQL's NOT NULL option
       allowNull: false,
-      //INSTRUCT THAT THIS IS THE Primary Key
       primaryKey: true,
-      //TURN ON AUTO INCREMENT
+      // Removes white space
       autoIncrement: true
     },
-  //2. DEFINE A USERNAME COLUMN
     username: {
       type: DataTypes.STRING,
       allowNull: false
     },
-  //3. DEFINE AN EMAIL COLUMN
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      //NO DUPLICATE EMAILS
+      // No duplicate emails
       unique: true,
-      //IF allowNull is set to false, we can run our data through validators before creating the table
+      // If allowNull is set to false, we can run our data through validators before creating the table
       validate: {
         isEmail: true
       }
     },
-  //4. DEFINE A PASSWORD COLUMN
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
-        //PASSWORD MUST BE ___ CHARACTERS LONG
+        // Password must be 4 characters long
         len: [4]
       }
     }

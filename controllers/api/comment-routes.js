@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { Comment } = require('../../models');
 
-//GET ROUTE FOR ALL COMMENTS
+// GET ROUTE FOR ALL COMMENTS
 // http://localhost:3001/api/comments
 router.get('/', (req, res) => {
   console.log('==============');
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 
-//POST ROUTE FOR ALL COMMENTS
+// POST ROUTE FOR ALL COMMENTS
 // http://localhost:3001/api/comments
 router.post('/', (req, res) => {
   Comment.create({
@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
 
 
 
-//DELETE ROUTE BY ID
+// DELETE COMMENT BY ID
 // http://localhost:3001/api/comments/id
 router.delete('/:id', (req, res) => {
   Comment.destroy({

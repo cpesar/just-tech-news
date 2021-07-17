@@ -1,11 +1,8 @@
 
-//IMPORT USER MODEL
+// Import models
 const User = require('./User');
-//IMPORT POST MODEL
 const Post = require('./Post');
-//IMPORT VOTE MODEL
 const Vote = require('./Vote');
-//IMPORT COMMENT MODEL
 const Comment = require('./Comment');
 
 
@@ -15,8 +12,6 @@ const Comment = require('./Comment');
 User.hasMany(Post, {
   foreignKey: 'user_id'
 });
-
-
 
 //DEFINES THE RELATIONSHIP OF THE Post MODEL TO THE User MODEL
 //A post can belong to one user, but not many users
@@ -78,13 +73,18 @@ Comment.belongsTo(Post, {
   foreignKey: 'post_id'
 });
 
+// User.hasMany(Comment, {
+//   foreignKey: 'user_id'
+// });
 User.hasMany(Comment, {
-  foreignKey: 'user_id'
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
 });
 
 Post.hasMany(Comment, {
   foreignKey: 'post_id'
 });
+
 
 
 //EXPORT OBJECT WITH USER MODEL AS A PROPERTY
