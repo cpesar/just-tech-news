@@ -8,15 +8,17 @@ const Comment = require('./Comment');
 
 
 //CREATE ASSOCIATIONS
-//A user can make many posts, but a post only belongs to a single user- never many users
+// A user can make many posts, but a post only belongs to a single user- never many users
 User.hasMany(Post, {
-  foreignKey: 'user_id'
+  foreignKey: 'user_id',
+  onDelete: 'CASCADE'
 });
 
 //DEFINES THE RELATIONSHIP OF THE Post MODEL TO THE User MODEL
-//A post can belong to one user, but not many users
+// A post can belong to one user, but not many users
 Post.belongsTo(User, {
   foreignKey: 'user_id',
+  onDelete: 'CASCADE'
 });
 
 
@@ -82,7 +84,8 @@ User.hasMany(Comment, {
 });
 
 Post.hasMany(Comment, {
-  foreignKey: 'post_id'
+  foreignKey: 'post_id',
+  onDelete: 'CASCADE'
 });
 
 

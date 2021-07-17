@@ -8,7 +8,7 @@ const { Post, User, Vote, Comment } = require('../../models');
 
 
 
-//ROUTE TO RETRIEVE ALL POSTS IN THE DB
+// ROUTE TO RETRIEVE ALL POSTS 
 // http://localhost:3001/api/posts
 router.get('/', (req, res) => {
   console.log('==============');
@@ -21,15 +21,13 @@ router.get('/', (req, res) => {
       'post_url', 
       'title', 
       'created_at',
-      
         //includes the total vote count for a post
         //THIS WILL ATTRIBUTE A GIVEN VOTE TO ITS CORRESPONDING POST, NOT ALL OF THE POSTS
        [ sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),'vote_count']
     ],
-     
     include:[
       {
-      //include comment model
+      // Include comment model
         model: Comment,
         attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
         include: {
@@ -37,7 +35,7 @@ router.get('/', (req, res) => {
           attributes: [ 'username' ]
         }
       },
-    //USE INCLUDE TO JOIN TABLES
+    // Include the User model so it can attach a username to a comment
       {
         model: User,
         attributes: ['username']
@@ -55,7 +53,7 @@ router.get('/', (req, res) => {
 
 
 
-//ROUTE TO GET A SINGLE POST
+// ROUTE TO GET A SINGLE POST
 // http://localhost:3001/api/posts/<id>
 router.get('/:id', (req,res) => {
   Post.findOne({
@@ -70,8 +68,7 @@ router.get('/:id', (req,res) => {
       [
         //includes the total vote count for a post
         sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-          'vote_count'
-      ]
+          'vote_count']
     ],
     include: [
       {
@@ -105,7 +102,7 @@ router.get('/:id', (req,res) => {
 
 
 
-//ROUTE TO CREATE A NEW POST
+// ROUTE TO CREATE A NEW POST
 // http://localhost:3001/api/posts/
 router.post('/', (req,res) => {
   // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
@@ -123,54 +120,56 @@ router.post('/', (req,res) => {
 });
 
 
-//PUT ROUTE FOR VOTING ON A POST
+// PUT ROUTE FOR VOTING ON A POST
 // http://localhost:3001/api/posts/upvote
 
-// router.put('/upvote', (req,res) => {
-//   // console.log(req.body);
-//   Vote.create({
-//     user_id: req.body.user_id,
-//     post_id: req.body.post_id
-//   }).then(() => {
-//     console.log('created vote!')
-//     //then find the post that was just voted on
-//     return Post.findOne({
-//       where: {
-//         id: req.body.post_id
-//       },
-//       attributes: [
-//         'id',
-//         'post_url',
-//         'title',
-//         'created_at',
-//         [
-//           sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-//           'vote_count'
-//         ]
-//       ]
-//     })
-//     .then(dbPostData => res.json(dbPostData))
-//     .catch(err => {
-//       console.log(err);
-//       res.status(400).json(err);
-//     });
-//   })
-// });
+router.put('/upvote', (req,res) => {
+  //console.log(req.body)
+  Vote.create({
+    user_id: req.body.user_id,
+    post_id: req.body.post_id
+  }).then(() => {
+  //then find the post that was just voted on
+    return Post.findOne({
+      where: {
+        id: req.body.post_id
+      },
+      attributes: [
+        'id',
+        'post_url',
+        'title',
+        'created_at',
+        [
+          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
+          'vote_count'
+        ]
+      ]
+    })
+    .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+  })
+});
 
 
 
 // PUT /api/posts/upvote
 //UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
-router.put('/upvote', (req,res) => {
-  //custom static method created in models/Post.js
-  Post.upvote(req.body, { Vote })
-    .then(updatedPostData => res.json(updatedPostData))
-    .catch(err => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+router.put('/upvote', (req, res) => {
+  // make sure the session exists first
+  // THIS WILL ONLY WORK IF THE USER IS LOGGED IN
+  if (req.session) {
+    // pass session id along with all destructured properties on req.body
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
+      .then(updatedVoteData => res.json(updatedVoteData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  }
 });
-
 
 // PUT /api/posts/upvote
 // router.put('/upvote', (req, res) => {

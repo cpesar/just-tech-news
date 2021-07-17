@@ -1,6 +1,6 @@
 <article class="post">
   <div class="title">
-    <a href="{{post.post_url}}" target="blank">{{post.title}}</a>
+    <a href="{{post.post_url}}" target="_blank">{{post.title}}</a>
     <span>({{post.post_url}})</span>
   </div>
   <div class="meta">
@@ -10,3 +10,36 @@
     <a href="/post/{{post.id}}">{{post.comments.length}} comment(s)</a>
   </div>
 </article>
+
+{{!-- Conditionally render the comment form if the user is logged in --}}
+{{#if loggedIn}}
+<form class="comment-form">
+  <div>
+    <textarea name="comment-body" ></textarea>
+  </div>
+
+  <div>
+    <button type="submit">add comment</button>
+    <button type="button" class="upvote-btn">upvote</button>
+  </div>
+</form>
+{{/if}}
+
+<div class="comments">
+  {{#each post.comments}}
+  <section class="comment">
+    <div class="meta">
+      {{user.username}} on {{created_at}}
+    </div>
+    <div class="text">
+      {{comment_text}}
+    </div>
+  </section>
+  {{/each}}
+</div>
+
+
+{{#if loggedIn}}
+<script src="/javascript/comment.js"></script>
+<script src="/javascript/upvote.js"></script>
+{{/if}}

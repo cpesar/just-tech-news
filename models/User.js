@@ -1,7 +1,4 @@
         //USER MODEL
-
-
-//IMPORT MODEL CLASS AND DataTypes FROM SEQUELIZE
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require ('../config/connection');
 
@@ -24,10 +21,7 @@ class User extends Model {
 //DEFINE TABLE COLUMNS AND CONFIGURATION
 User.init(
 {
-  //TABLE COLUMN DEFINITIONS GO HERE
-      //THIS WILL HAVE 4 COLUMNS
     id: {
-      //USE THE SPECIAL Sequelize DataTypes object to provide what type of data it is
       type: DataTypes.INTEGER,
       // Equivalent to SQL's NOT NULL option
       allowNull: false,

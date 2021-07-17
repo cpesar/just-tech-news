@@ -1,14 +1,8 @@
           //POST MODEL
-
-
-//IMPORT THESE 
-//model and DataTypes from sequelize package
 const { Model, DataTypes } = require('sequelize');
-//connection to MySQL
 const sequelize = require('../config/connection');
 
-//DEFINE THE POST MODEL
-// create our Post model
+// DEFINE THE POST MODEL
 class Post extends Model {
   //static keyword to indicate that the upvote method is based on the post model
   static upvote(body, models){

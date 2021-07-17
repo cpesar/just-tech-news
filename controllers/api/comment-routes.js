@@ -18,16 +18,20 @@ router.get('/', (req, res) => {
 // POST ROUTE FOR ALL COMMENTS
 // http://localhost:3001/api/comments
 router.post('/', (req, res) => {
+  // Check the session
+  if(req.session){
   Comment.create({
     comment_text: req.body.comment_text,
-    user_id: req.body.user_id,
-    post_id: req.body.post_id 
+    post_id: req.body.post_id,
+    // Use the id from the session
+    user_id: req.session.user_id
   })
   .then(dbCommentData => res.json(dbCommentData))
   .catch(err => {
     console.log(err);
     res.status(400).json(err);
   });
+}
 });
 
 

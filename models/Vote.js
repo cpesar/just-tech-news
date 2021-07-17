@@ -6,7 +6,6 @@ class Vote extends Model {}
 
 Vote.init(
   {
-    //TABLE COLUMN DEFINITIONS GO HERE
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -39,9 +38,6 @@ Vote.init(
     modelName: 'vote'
   }
 );
-
-
-
 
 
 //EXPORT THE VOTE MODEL

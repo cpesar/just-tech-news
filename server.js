@@ -1,9 +1,5 @@
 
-
-
             //MAKE SURE THAT THE ORDER OF OPERATIONS IS CORRECT!!
-
-
 const path = require('path');
 const express = require('express');
 const routes = require('./controllers');
@@ -15,7 +11,6 @@ const hbs = exphbs.create({});
 
 
 const session = require('express-session');
-
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -59,7 +54,7 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // TURN ON CONNECTION TO DB AND SERVER
-//force: true ---- Forces tables to recreate if there are any changes
+  // force: true ---- Forces tables to recreate if there are any changes
   // if sequelize.sync were set to true, it would drop and recreate all of the databases on startup
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
