@@ -228,7 +228,7 @@ router.put('/:id', (req,res) => {
 
 //DELETE ROUTE FOR USERS BY ID
 // http://localhost:3001/api/users/1
-router.delete('/:id', (req,res) => {
+router.delete('/:id', (req, res) => {
   User.destroy({
     where: {
       id: req.params.id

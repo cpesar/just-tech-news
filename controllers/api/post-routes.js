@@ -186,6 +186,7 @@ router.put('/upvote', (req,res) => {
 
 
 //UPDATE A POST'S TITLE USING A PUT ROUTE
+// http://localhost:3001/api/posts/id
 router.put('/:id', (req,res) => {
   Post.update(
     {
@@ -214,6 +215,7 @@ router.put('/:id', (req,res) => {
 
 
 //DELETE ROUTE
+// http://localhost:3001/api/posts/id
 router.delete('/:id', (req, res) => {
   Post.destroy({
     where: {
