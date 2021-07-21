@@ -81,11 +81,6 @@ router.post('/', (req,res) => {
     email: req.body.email,
     password: req.body.password
   })
-  // .then(dbUserData => res.json(dbUserData))
-  // .catch(err => {
-  //   console.log(err);
-  //   res.status(500).json(err);
-  // });
 
   .then(dbUserData => {
     req.session.save(() => {
@@ -100,7 +95,7 @@ router.post('/', (req,res) => {
     console.log(err);
     res.status(500).json(err);
   });
-
+});
 
 
 
@@ -121,7 +116,7 @@ router.post('/', (req,res) => {
   //   console.log(err);
   //   res.status(500).json(err);
   // });
-});
+
 
 
 
@@ -161,12 +156,11 @@ router.post('/login', (req, res) => {
 // LOG OUT ROUTE
 router.post('/logout', (req,res) => {
   if(req.session.loggedIn) {
-    console.log(res.status);
+    // console.log(res.status);
     req.session.destroy(() => {
       res.status(204).end();
     });
-  }
-  else{
+  } else {
     res.status(404).end();
   }
 });

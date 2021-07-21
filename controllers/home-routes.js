@@ -8,6 +8,7 @@ const {Post, User, Comment } = require('../models');
 
 // GET ALL POSTS
 router.get('/', (req, res) => {
+  console.log('======================');
   Post.findAll({
     attributes: [
       'id',
@@ -32,12 +33,13 @@ router.get('/', (req, res) => {
     ]
   })
   .then(dbPostData => {
-    //pass a single post object into the homepage template
-    // console.log(dbPostData[0]);
-
-    //THIS WILL LOOP AND MAP EACH SEQUELIZE OBJECT, AND SAVE THE RESULTS IN A NEW POST ARRAY
-    const posts = dbPostData.map(post => post.get({ plain: true }));           
-    res.render('homepage', { posts, loggedIn: req.session.loggedIn });
+    // THIS WILL LOOP AND MAP EACH SEQUELIZE OBJECT, AND SAVE THE RESULTS IN A NEW POST ARRAY
+    const posts = dbPostData.map(post => post.get({ plain: true }));   
+    // This will render to the homepage.handlebars template        
+    res.render('homepage', { 
+      posts, 
+      loggedIn: req.session.loggedIn 
+    });
   })
   .catch(err => {
     console.log(err);
@@ -82,7 +84,10 @@ router.get('/post/:id', (req, res) => {
     // Serialize the data
     const post = dbPostData.get({ plain: true });
     // Pass data to template
-    res.render('single-post', { post, loggedIn: req.session.loggedIn });
+    res.render('single-post', { 
+      post, 
+      loggedIn: req.session.loggedIn 
+    });
   })
   .catch(err => {
     console.log(err);

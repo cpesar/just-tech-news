@@ -31,14 +31,16 @@ User.belongsToMany(Post, {
   as: 'voted_posts',
   //FOREIGN KEY CONSTRAINT
   //the foreign keys are unique which prevents a single user from voting on one post multiple times
-  foreignKey: 'user_id'
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
 });
      //2. allows us to see which post a single user voted on
 Post.belongsToMany(User, {
   through: Vote,
   as: 'voted_posts',
   //the foreign keys are unique which prevents a single user from voting on one post multiple times
-  foreignKey: 'post_id'
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
 });
 
 
@@ -47,11 +49,13 @@ Post.belongsToMany(User, {
 
 //CONNECT THE Post and User MODELS (ONE TO MANY ASSOCIATIONS BETWEEN MODELS)
 Vote.belongsTo(User, {
-  foreignKey: 'user_id'
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
 });
 
 Vote.belongsTo(Post, {
-  foreignKey: 'post_id'
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
 });
 
 User.hasMany(Vote, {
@@ -68,24 +72,22 @@ Post.hasMany(Vote, {
 
 //CONNECT THE MODELS (we only want to see the user's comment and which post it was for)
 Comment.belongsTo(User, {
-  foreignKey: 'user_id'
+  foreignKey: 'user_id',
+  onDelete: 'SET NULL'
 });
 
 Comment.belongsTo(Post, {
-  foreignKey: 'post_id'
+  foreignKey: 'post_id',
+  onDelete: 'SET NULL'
 });
 
-// User.hasMany(Comment, {
-//   foreignKey: 'user_id'
-// });
 User.hasMany(Comment, {
   foreignKey: 'user_id',
-  onDelete: 'CASCADE'
+  onDelete: 'SET NULL'
 });
 
 Post.hasMany(Comment, {
-  foreignKey: 'post_id',
-  onDelete: 'CASCADE'
+  foreignKey: 'post_id'
 });
 
 

@@ -41,8 +41,6 @@ class Post extends Model {
 
 
 //DEFINE COLUMNS IN THE POST MODEL (this will have 4 columns)
-//POST SCHEMA
-//Create fields/columns for Post model
 Post.init(
   {
     //column 1

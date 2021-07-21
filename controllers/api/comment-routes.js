@@ -39,22 +39,24 @@ router.post('/', (req, res) => {
 // DELETE COMMENT BY ID
 // http://localhost:3001/api/comments/id
 router.delete('/:id', (req, res) => {
+  if(req.session){
   Comment.destroy({
     where: {
       id: req.params.id
     }
   })
-  .then(dbPostData => {
-    if(!dbPostData){
+  .then(dbCommentData => {
+    if(!dbCommentData){
       res.status(404).json({ message: 'No comment found with this id '});
       return;
     }
-    res.json(dbPostData);
+    res.json(dbCommentData);
   })
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
+}
 });
 
 module.exports = router;

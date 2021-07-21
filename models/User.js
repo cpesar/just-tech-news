@@ -1,15 +1,16 @@
         //USER MODEL
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require ('../config/connection');
-
 //REQUIRE bcrypt FOR HASHING PASSWORDS
 const bcrypt = require('bcrypt');
+const sequelize = require ('../config/connection');
+
+
 
 //CREATE USER MODEL
 //MODEL CLASS IS WHAT WE CREATE OUR OWN USER MODELS FROM USING THE extends KEYWORD
 class User extends Model {
-  //set up method to run on instance data (per user) to check password
-  //NOTE WHEN USING bcrypt ON A SERVER async IS RECOMMENDED
+  // set up method to run on instance data (per user) to check password
+  // WHEN USING bcrypt ON A SERVER async IS RECOMMENDED
   checkPassword(loginPw) {
     //USING THE .this METHOD WE CAN ACCESS THE USER'S PROPERTIES, INCLUDING THE PASSWORD, WHICH WAS STORED AS A HASHED STRING
     //THIS WILL RETURN TRUE ON SUCCESS, OR FALSE ON FAILURE

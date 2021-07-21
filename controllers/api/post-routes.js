@@ -5,9 +5,6 @@ const router = require('express').Router();
 const { Post, User, Vote, Comment } = require('../../models');
 
 
-
-
-
 // ROUTE TO RETRIEVE ALL POSTS 
 // http://localhost:3001/api/posts
 router.get('/', (req, res) => {
@@ -72,16 +69,16 @@ router.get('/:id', (req,res) => {
     ],
     include: [
       {
-        model: User,
-        attributes: ['username']
-      },
-      {
         model: Comment,
         attributes: ['id', 'comment_text', 'created_at'],
         include:{
           model: User,
           attributes: ['username']
         }
+      },
+      {
+        model: User,
+        attributes: ['username']
       }
     ]
   })
@@ -105,61 +102,62 @@ router.get('/:id', (req,res) => {
 // ROUTE TO CREATE A NEW POST
 // http://localhost:3001/api/posts/
 router.post('/', (req,res) => {
-  // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
+  if(req.session){
   Post.create({
-    //USES req.body TO POPULATE THE COLUMNS IN THE POST TABLE
+    // Uses req.body to populate the title, and post_url columns
+    // Uses session.user_id, once the user has logged in
     title: req.body.title,
     post_url: req.body.post_url,
-    user_id: req.body.user_id 
+    user_id: req.session.user_id 
   })
   .then(dbPostData => res.json(dbPostData))
   .catch(err => {
     console.log(err);
     res.status(500).json(err);
   });
+}
 });
 
 
 // PUT ROUTE FOR VOTING ON A POST
 // http://localhost:3001/api/posts/upvote
 
-router.put('/upvote', (req,res) => {
-  //console.log(req.body)
-  Vote.create({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id
-  }).then(() => {
-  //then find the post that was just voted on
-    return Post.findOne({
-      where: {
-        id: req.body.post_id
-      },
-      attributes: [
-        'id',
-        'post_url',
-        'title',
-        'created_at',
-        [
-          sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
-          'vote_count'
-        ]
-      ]
-    })
-    .then(dbPostData => res.json(dbPostData))
-    .catch(err => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-  })
-});
+// router.put('/upvote', (req,res) => {
+//   //console.log(req.body)
+//   Vote.create({
+//     user_id: req.body.user_id,
+//     post_id: req.body.post_id
+//   }).then(() => {
+//   //then find the post that was just voted on
+//     return Post.findOne({
+//       where: {
+//         id: req.body.post_id
+//       },
+//       attributes: [
+//         'id',
+//         'post_url',
+//         'title',
+//         'created_at',
+//         [
+//           sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'),
+//           'vote_count'
+//         ]
+//       ]
+//     })
+//     .then(dbPostData => res.json(dbPostData))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+//   })
+// });
 
 
 
-// PUT /api/posts/upvote
-//UPDATED UPVOTE PUT ROUTE (this is the same as the previous route above)
+// PUT 
+//http://api/posts/upvote
 router.put('/upvote', (req, res) => {
-  // make sure the session exists first
-  // THIS WILL ONLY WORK IF THE USER IS LOGGED IN
+    // Make sure the session exists first
   if (req.session) {
     // pass session id along with all destructured properties on req.body
     Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
@@ -171,20 +169,9 @@ router.put('/upvote', (req, res) => {
   }
 });
 
-// PUT /api/posts/upvote
-// router.put('/upvote', (req, res) => {
-// Vote.create({
-//   user_id: req.body.user_id,
-//   post_id: req.body.post_id
-// })
-//   .then(dbPostData => res.json(dbPostData))
-//   .catch(err => res.json(err));
-// });
 
 
-
-
-//UPDATE A POST'S TITLE USING A PUT ROUTE
+// UPDATE A POST'S TITLE USING A PUT ROUTE
 // http://localhost:3001/api/posts/id
 router.put('/:id', (req,res) => {
   Post.update(
@@ -213,9 +200,10 @@ router.put('/:id', (req,res) => {
 
 
 
-//DELETE ROUTE
+// DELETE ROUTE
 // http://localhost:3001/api/posts/id
 router.delete('/:id', (req, res) => {
+  console.log('id', req.params.id);
   Post.destroy({
     where: {
       id: req.params.id
@@ -233,10 +221,6 @@ router.delete('/:id', (req, res) => {
     res.status(500).json(err);
   });
 });
-
-
-
-
 
 
 module.exports = router;
